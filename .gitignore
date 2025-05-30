@@ -1,0 +1,25 @@
+# MATLAB
+*.asv
+*.m~
+*.mex*
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+
+# Mathematica
+*.nb~
+*.mx
+*.bak
+
+# General
+*.log
+

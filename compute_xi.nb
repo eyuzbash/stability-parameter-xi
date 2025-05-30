@@ -1,0 +1,291 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[      9726,        283]
+NotebookOptionsPosition[      9026,        262]
+NotebookOutlinePosition[      9420,        278]
+CellTagsIndexPosition[      9377,        275]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"start", "=", 
+    RowBox[{"AbsoluteTime", "[", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Load", " ", "\[Alpha]\.b2F", 
+    RowBox[{"(", "\[Omega]", ")"}], " ", "data", " ", "from", " ", "file"}], 
+   "*)"}], 
+  RowBox[{
+   RowBox[{"data", "=", 
+    RowBox[{"Import", "[", 
+     RowBox[{
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+         "\"\<a2F_Hg_0GPa.txt\>\""}], "}"}], "]"}], ",", "\"\<Table\>\""}], 
+     "]"}]}], ";"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"a2F", "=", 
+    RowBox[{"Interpolation", "[", 
+     RowBox[{"data", ",", 
+      RowBox[{"InterpolationOrder", "->", "1"}]}], "]"}]}], ";"}], "   ", 
+  "\[IndentingNewLine]"}], "\n", 
+ RowBox[{
+  RowBox[{"omegaMin", "=", 
+   RowBox[{"data", "[", 
+    RowBox[{"[", 
+     RowBox[{"1", ",", "1"}], "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"omegaMax", "=", 
+    RowBox[{"data", "[", 
+     RowBox[{"[", 
+      RowBox[{
+       RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\n", 
+  RowBox[{"(*", 
+   RowBox[{"Define", " ", "g", 
+    RowBox[{"(", "x", ")"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"g", "[", "x_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"6", " ", 
+      RowBox[{"x", "^", "2"}]}], "+", 
+     RowBox[{"12", " ", 
+      RowBox[{"x", "^", "3"}], " ", 
+      RowBox[{"Im", "[", 
+       RowBox[{"PolyGamma", "[", 
+        RowBox[{"1", ",", 
+         RowBox[{"I", " ", "x"}]}], "]"}], "]"}]}], "+", 
+     RowBox[{"6", " ", 
+      RowBox[{"x", "^", "4"}], " ", 
+      RowBox[{"Re", "[", 
+       RowBox[{"PolyGamma", "[", 
+        RowBox[{"2", ",", 
+         RowBox[{"I", " ", "x"}]}], "]"}], "]"}]}]}]}], ";"}], 
+  "\[IndentingNewLine]", "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Precompute", " ", "g", 
+     RowBox[{"(", "x", ")"}], " ", "from", " ", "x"}], "=", "0"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gTable", "=", 
+   RowBox[{"Interpolation", "[", 
+    RowBox[{
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x", ",", 
+         RowBox[{"g", "[", "x", "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "0.", ",", "20", ",", "0.001"}], "}"}]}], "]"}], 
+     ",", 
+     RowBox[{"InterpolationOrder", "->", "3"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"gComputed", "[", 
+     RowBox[{"x_", "?", "NumericQ"}], "]"}], ":=", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"0", "<=", "x", "<=", "20"}], ",", 
+      RowBox[{"gTable", "[", "x", "]"}], ",", "0"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "Define", " ", "the", " ", "integrand", " ", "using", " ", "tabulated", 
+    " ", "g"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"integrand", "[", 
+     RowBox[{
+      RowBox[{"\[Omega]_", "?", "NumericQ"}], ",", 
+      RowBox[{"T_", "?", "NumericQ"}]}], "]"}], ":=", 
+    RowBox[{
+     RowBox[{"Boole", "[", 
+      RowBox[{"omegaMin", "<=", "\[Omega]", "<=", "omegaMax"}], "]"}], "*", 
+     RowBox[{"gComputed", "[", 
+      RowBox[{"\[Omega]", "/", 
+       RowBox[{"(", 
+        RowBox[{"2", " ", "Pi", " ", "T"}], ")"}]}], "]"}], "*", 
+     RowBox[{"(", 
+      RowBox[{"2", " ", 
+       RowBox[{
+        RowBox[{"a2F", "[", "\[Omega]", "]"}], "/", "\[Omega]"}]}], ")"}]}]}],
+    ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Temperature", " ", "range"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"Tmin", "=", "0"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Tmax", "=", 
+    RowBox[{"omegaMax", "/", "2"}]}], ";"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"Define", " ", "\[Xi]", 
+     RowBox[{"(", "T", ")"}], " ", "with", " ", "speed"}], "-", 
+    RowBox[{"optimized", " ", "integration", " ", "settings"}]}], 
+   "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"xiIntegral", "[", 
+     RowBox[{"T_", "?", "NumericQ"}], "]"}], ":=", 
+    RowBox[{"NIntegrate", "[", 
+     RowBox[{
+      RowBox[{"integrand", "[", 
+       RowBox[{"\[Omega]", ",", "T"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"\[Omega]", ",", "omegaMin", ",", "omegaMax"}], "}"}], ",", 
+      RowBox[{"Method", "->", "\"\<GlobalAdaptive\>\""}], ",", 
+      RowBox[{"AccuracyGoal", "->", "2"}], ",", 
+      RowBox[{"PrecisionGoal", "->", "2"}], ",", 
+      RowBox[{"MaxRecursion", "->", "12"}], ",", 
+      RowBox[{"MinRecursion", "->", "4"}], ",", 
+      RowBox[{"Exclusions", "->", "None"}]}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Maximize", " ", "\[Xi]", 
+    RowBox[{"(", "T", ")"}], " ", "over", " ", "T"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"xiMax", ",", "rules"}], "}"}], "=", 
+   RowBox[{"NMaximize", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"xiIntegral", "[", "T", "]"}], ",", 
+       RowBox[{"Tmin", "<=", "T", "<=", "Tmax"}]}], "}"}], ",", "T"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Topt", "=", 
+    RowBox[{"T", "/.", " ", "rules"}]}], ";"}], "\[IndentingNewLine]", "\n", 
+  RowBox[{"(*", 
+   RowBox[{"Output", " ", "results"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Optimal temperature (frequency units): \>\"", ",", "Topt"}], 
+   "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Print", "[", 
+    RowBox[{"\"\<Stability parameter \[Xi]: \>\"", ",", "xiMax"}], "]"}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Print", "[", 
+   RowBox[{"\"\<Total runtime (sec): \>\"", ",", 
+    RowBox[{
+     RowBox[{"AbsoluteTime", "[", "]"}], "-", "start"}]}], "]"}], 
+  ";"}], "\n"}], "Input",
+ CellChangeTimes->{{3.957554360360692*^9, 3.957554386165566*^9}, {
+  3.957554438414361*^9, 3.957554449244924*^9}, {3.957554496919374*^9, 
+  3.957554537436523*^9}, {3.9575545850658083`*^9, 3.957554585213812*^9}, {
+  3.9575546314790983`*^9, 3.9575546322575903`*^9}, {3.9575546626216393`*^9, 
+  3.957554662845212*^9}, {3.957554760803514*^9, 3.957554790072929*^9}, {
+  3.957554851634939*^9, 3.957554854804305*^9}, {3.957554924960149*^9, 
+  3.957554929194851*^9}, {3.957554971868725*^9, 3.9575549750970488`*^9}, {
+  3.95756033969674*^9, 
+  3.957560343416532*^9}},ExpressionUUID->"10092ea3-46b8-42a2-aa2d-\
+eefdbd0cd558"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Optimal temperature (frequency units): \"\>", 
+   "\[InvisibleSpace]", "9.311817198461302`"}],
+  SequenceForm["Optimal temperature (frequency units): ", 9.311817198461302],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9575544604973583`*^9, 3.957554514854085*^9, 
+  3.9575545523151093`*^9, 3.957554598639407*^9, 3.957554646322606*^9, 
+  3.95755467845109*^9, 3.957554805789557*^9, 3.957554882893214*^9, 
+  3.9575549468309517`*^9, 3.957554992036747*^9},
+ CellLabel->
+  "During evaluation of \
+In[433]:=",ExpressionUUID->"010e8a29-afb9-4b00-8a3c-6542e521ba35"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Stability parameter \[Xi]: \"\>", "\[InvisibleSpace]", 
+   "0.27133661274490956`"}],
+  SequenceForm["Stability parameter \[Xi]: ", 0.27133661274490956`],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9575544604973583`*^9, 3.957554514854085*^9, 
+  3.9575545523151093`*^9, 3.957554598639407*^9, 3.957554646322606*^9, 
+  3.95755467845109*^9, 3.957554805789557*^9, 3.957554882893214*^9, 
+  3.9575549468309517`*^9, 3.957554992037717*^9},
+ CellLabel->
+  "During evaluation of \
+In[433]:=",ExpressionUUID->"918caf21-ef0e-4f60-a475-bb703e62eace"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Total runtime (sec): \"\>", "\[InvisibleSpace]", 
+   "14.726201`7.619635717423913"}],
+  SequenceForm["Total runtime (sec): ", 14.726201`7.619635717423913],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.9575544604973583`*^9, 3.957554514854085*^9, 
+  3.9575545523151093`*^9, 3.957554598639407*^9, 3.957554646322606*^9, 
+  3.95755467845109*^9, 3.957554805789557*^9, 3.957554882893214*^9, 
+  3.9575549468309517`*^9, 3.957554992039032*^9},
+ CellLabel->
+  "During evaluation of \
+In[433]:=",ExpressionUUID->"f911def0-74e9-4b49-be6f-3da45183e679"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 911},
+WindowMargins->{{477, Automatic}, {Automatic, 50}},
+FrontEndVersion->"14.1 for Mac OS X x86 (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"1600d708-41f8-4077-8bee-60c50e41de51"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 6594, 192, 805, "Input",ExpressionUUID->"10092ea3-46b8-42a2-aa2d-eefdbd0cd558"],
+Cell[CellGroupData[{
+Cell[7195, 218, 611, 12, 23, "Print",ExpressionUUID->"010e8a29-afb9-4b00-8a3c-6542e521ba35"],
+Cell[7809, 232, 592, 12, 23, "Print",ExpressionUUID->"918caf21-ef0e-4f60-a475-bb703e62eace"],
+Cell[8404, 246, 594, 12, 23, "Print",ExpressionUUID->"f911def0-74e9-4b49-be6f-3da45183e679"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
