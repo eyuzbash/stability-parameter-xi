@@ -1,5 +1,7 @@
 # Stability Parameter ξ Calculator
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15550102.svg)](https://doi.org/10.5281/zenodo.15550102)
+
 This repository provides Mathematica, Python, and MATLAB codes for computing the stability parameter **ξ** from the Eliashberg function α²F(ω). The stability condition ξ < ξ_c ≤ 1 sets fundamental upper limits on the electron-phonon interaction strength and superconducting transition temperature in metals.
 
 According to current experimental data, ξ_c ≈ 1/2 in hydrides and is significantly lower in conventional metals. These results are based on the theoretical analysis in:
